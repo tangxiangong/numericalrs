@@ -3,6 +3,8 @@ pub mod nd_array;
 
 pub use nd_array::array::Array;
 
+pub use nd_array::ops;
+
 // #[cfg(test)]
 // mod tests {
 //     use super::*;
