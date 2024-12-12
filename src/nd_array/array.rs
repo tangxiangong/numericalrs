@@ -1,7 +1,8 @@
 use crate::nd_array::errors::MathError;
 use std::fmt;
 use std::fmt::{Debug, Display, Formatter};
-use std::ops::{Deref, DerefMut, Index, IndexMut};
+use std::ops::{Index, IndexMut};
+// use std::ops::{Deref, DerefMut}
 use std::slice::Iter;
 
 #[inline]
@@ -15,7 +16,7 @@ pub enum Norm {
     LInf,
 }
 
-// TODO line space 等方法
+// TODO linspace 等方法
 
 #[derive(Debug)]
 pub struct Array {
@@ -127,18 +128,18 @@ impl<const N: usize> From<[i32; N]> for Array {
     }
 }
 
-impl Deref for Array {
-    type Target = [f64];
-    fn deref(&self) -> &Self::Target {
-        &(self.data)
-    }
-}
-
-impl DerefMut for Array {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut (self.data)
-    }
-}
+// impl Deref for Array {
+//     type Target = [f64];
+//     fn deref(&self) -> &Self::Target {
+//         &(self.data)
+//     }
+// }
+// 
+// impl DerefMut for Array {
+//     fn deref_mut(&mut self) -> &mut Self::Target {
+//         &mut (self.data)
+//     }
+// }
 
 impl Index<usize> for Array {
     type Output = f64;

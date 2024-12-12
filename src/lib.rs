@@ -5,6 +5,8 @@ pub use nd_array::array::Array;
 
 pub use nd_array::ops;
 
+pub use nd_array::array::Norm;
+
 // #[cfg(test)]
 // mod tests {
 //     use super::*;
