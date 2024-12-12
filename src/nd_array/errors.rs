@@ -12,18 +12,24 @@ impl DimensionError1D {
     }
 }
 
-
 impl Display for DimensionError1D {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "纬度不匹配! 左边的维度为 {}, 而右边的维度为 {}.", self.lhs, self.rhs)
+        write!(
+            f,
+            "纬度不匹配! 左边的维度为 {}, 而右边的维度为 {}.",
+            self.lhs, self.rhs
+        )
     }
 }
 
 impl Debug for DimensionError1D {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "纬度不匹配! 左边的维度为 {}, 而右边的维度为 {}.", self.lhs, self.rhs)
+        write!(
+            f,
+            "纬度不匹配! 左边的维度为 {}, 而右边的维度为 {}.",
+            self.lhs, self.rhs
+        )
     }
 }
-
 
 impl std::error::Error for DimensionError1D {}

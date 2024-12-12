@@ -1,4 +1,4 @@
-#[macro_export] 
+#[macro_export]
 macro_rules! array {
     () => (
         $crate::nd_array::Array::new()
