@@ -1,7 +1,7 @@
 #[macro_export]
 macro_rules! array {
     () => (
-        $crate::nd_array::Array::new()
+        $crate::r#mod::Array::new()
     );
     ($elem:expr; $n:expr) => (
         $crate::Array::from([$elem as f64; $n])

@@ -4,6 +4,7 @@ use std::fmt::{Debug, Display, Formatter};
 pub enum MathError {
     DimensionErr1D(usize, usize),
     EmptyArrayErr,
+    ArgsErr(&'static str),
 }
 
 impl std::error::Error for MathError {}
@@ -17,6 +18,7 @@ impl Display for MathError {
                 lhs, rhs
             ),
             MathError::EmptyArrayErr => write!(f, "Error: 该操作对空向量非法！"),
+            MathError::ArgsErr(s) => write!(f, "Error: 参数错误, {s}."),
         }
     }
 }
@@ -30,6 +32,7 @@ impl Debug for MathError {
                 lhs, rhs
             ),
             MathError::EmptyArrayErr => write!(f, "该操作对空向量非法！"),
+            MathError::ArgsErr(s) => write!(f, "参数错误, {s}."),
         }
     }
 }

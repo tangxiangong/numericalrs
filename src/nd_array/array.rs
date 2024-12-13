@@ -2,7 +2,6 @@ use crate::nd_array::errors::MathError;
 use std::fmt;
 use std::fmt::{Debug, Display, Formatter};
 use std::ops::{Index, IndexMut};
-// use std::ops::{Deref, DerefMut}
 use std::slice::Iter;
 
 #[inline]
@@ -16,11 +15,15 @@ pub enum Norm {
     LInf,
 }
 
-// TODO linspace 等方法
-
 #[derive(Debug)]
 pub struct Array {
     data: Vec<f64>,
+}
+
+impl Default for Array {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Array {
@@ -29,13 +32,26 @@ impl Array {
         Array { data }
     }
 
-    pub fn zero(size: usize) -> Array {
+    pub fn zeros(size: usize) -> Array {
         Array::from(vec![0.0; size])
     }
 
-    pub fn one(size: usize) -> Array {
+    pub fn ones(size: usize) -> Array {
         let data = vec![1.0; size];
         Array { data }
+    }
+
+    pub fn linspace(start: f64, end: f64, nums: usize) -> Result<Array, MathError> {
+        if start >= end {
+            Err(MathError::ArgsErr("第一个参数要小于第二个参数"))
+        } else {
+            let h = (end - start) / nums as f64;
+            let mut result = Array::zeros(nums);
+            for k in 0..nums {
+                result[k] = k as f64 * h;
+            }
+            Ok(result)
+        }
     }
 
     pub fn is_empty(&self) -> bool {
@@ -128,19 +144,6 @@ impl<const N: usize> From<[i32; N]> for Array {
     }
 }
 
-// impl Deref for Array {
-//     type Target = [f64];
-//     fn deref(&self) -> &Self::Target {
-//         &(self.data)
-//     }
-// }
-// 
-// impl DerefMut for Array {
-//     fn deref_mut(&mut self) -> &mut Self::Target {
-//         &mut (self.data)
-//     }
-// }
-
 impl Index<usize> for Array {
     type Output = f64;
     fn index(&self, index: usize) -> &Self::Output {
@@ -167,6 +170,25 @@ impl FromIterator<f64> for Array {
     fn from_iter<I: IntoIterator<Item = f64>>(iter: I) -> Self {
         let v = Vec::from_iter(iter);
         Array::from(v)
+    }
+}
+
+impl PartialEq for Array {
+    fn eq(&self, other: &Self) -> bool {
+        if self.size() != other.size() {
+            false
+        } else if self.is_zero() {
+            true
+        } else {
+            let mut result = true;
+            for (&a, &b) in self.iter().zip(other.iter()) {
+                if !approx_equal(a, b) {
+                    result = false;
+                    break;
+                }
+            }
+            result
+        }
     }
 }
 

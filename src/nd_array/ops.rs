@@ -55,7 +55,7 @@ impl Neg for &Array {
         if self.is_empty() {
             Err(MathError::EmptyArrayErr)
         } else if self.is_zero() {
-            Ok(Array::zero(self.size()))
+            Ok(Array::zeros(self.size()))
         } else {
             Ok(self.iter().map(|&x| -x).collect())
         }
@@ -123,7 +123,7 @@ impl Mul<f64> for &Array {
         if self.is_empty() {
             Err(MathError::EmptyArrayErr)
         } else if self.is_zero() || approx_equal(rhs, 0.0) {
-            Ok(Array::zero(self.size()))
+            Ok(Array::zeros(self.size()))
         } else {
             let result: Array = self.iter().map(|&v| v * rhs).collect();
             Ok(result)

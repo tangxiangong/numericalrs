@@ -7,6 +7,10 @@ pub use nd_array::ops;
 
 pub use nd_array::array::Norm;
 
+pub use nd_array::matrix::Matrix;
+
+pub mod polynomial;
+
 // #[cfg(test)]
 // mod tests {
 //     use super::*;
