@@ -144,20 +144,39 @@ impl<const N: usize> From<[i32; N]> for Array {
     }
 }
 
-impl Index<usize> for Array {
-    type Output = f64;
-    fn index(&self, index: usize) -> &Self::Output {
-        &(self.data[index])
+impl<Idx> Index<Idx> for Array
+where [f64] : Index<Idx>
+{
+    type Output = <[f64] as Index<Idx>>::Output;
+    fn index(&self, index: Idx) -> &Self::Output {
+        &(self.data.as_slice()[index])
     }
 }
 
-impl IndexMut<usize> for Array {
-    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        &mut self.data[index]
+impl<Idx> IndexMut<Idx> for Array
+where [f64] : IndexMut<Idx>
+{
+    fn index_mut(&mut self, index: Idx) -> &mut Self::Output {
+        &mut self.data.as_mut_slice()[index]
     }
+
 }
 
-// TODO 切片操作
+
+// impl Index<usize> for Array {
+//     type Output = f64;
+//     fn index(&self, index: usize) -> &Self::Output {
+//         &(self.data[index])
+//     }
+// }
+// 
+// impl IndexMut<usize> for Array {
+//     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+//         &mut self.data[index]
+//     }
+// }
+// 
+//
 // impl<T> ops::Index<Range<usize>> for Array<T>
 // where T: Num + Copy + Clone {
 //     type Output = Array<T>;
