@@ -1,6 +1,6 @@
 use super::array::Array;
-use super::errors::MathError;
 use crate::approx_equal;
+use crate::MathError;
 use std::ops::{Add, Mul, Neg, Sub};
 
 impl Add for &Array {

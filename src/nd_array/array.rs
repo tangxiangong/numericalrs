@@ -1,5 +1,5 @@
 use crate::approx_equal;
-use crate::nd_array::errors::MathError;
+use crate::MathError;
 use std::fmt;
 use std::fmt::{Debug, Display, Formatter};
 use std::ops::{Deref, DerefMut};

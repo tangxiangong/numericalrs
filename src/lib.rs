@@ -12,7 +12,9 @@ pub use nd_array::array::Norm;
 
 pub use nd_array::matrix::Matrix;
 
+pub mod errors;
 pub mod polynomial;
+pub use errors::*;
 
 // #[cfg(test)]
 // mod tests {
