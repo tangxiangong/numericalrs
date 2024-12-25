@@ -1,4 +1,5 @@
-use super::array::{approx_equal, Array};
+use crate::approx_equal;
+use super::array::Array;
 use super::errors::MathError;
 use std::ops::{Add, Mul, Neg, Sub};
 
@@ -54,7 +55,7 @@ impl Neg for &Array {
     fn neg(self) -> Self::Output {
         if self.is_empty() {
             Err(MathError::EmptyArrayErr)
-        } else if self.is_zero() {
+        } else if self.is_zeros() {
             Ok(Array::zeros(self.size()))
         } else {
             Ok(self.iter().map(|&x| -x).collect())
@@ -122,7 +123,7 @@ impl Mul<f64> for &Array {
     fn mul(self, rhs: f64) -> Self::Output {
         if self.is_empty() {
             Err(MathError::EmptyArrayErr)
-        } else if self.is_zero() || approx_equal(rhs, 0.0) {
+        } else if self.is_zeros() || approx_equal(rhs, 0.0) {
             Ok(Array::zeros(self.size()))
         } else {
             let result: Array = self.iter().map(|&v| v * rhs).collect();
