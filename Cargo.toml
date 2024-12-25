@@ -1,11 +1,15 @@
 [package]
-name = "numericalrs"
+name = "numrs"
 version = "0.1.0"
 edition = "2021"
 
+
+[lib]
+name = "numrs"
 
 [profile.release]
 opt-level = 3
 
 [dependencies]
+num = "0.4.3"
 thiserror = "2.0.9"

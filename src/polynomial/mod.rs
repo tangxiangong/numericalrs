@@ -1,16 +1,25 @@
 use crate::Array;
+use num::traits::real::Real;
 
-pub struct Polynomial {
-    coefficients: Array,
-    roots: Option<Array>,
+pub struct Polynomial<T: Real> {
+    coefficient: Array<T>,
+    root: Option<Array<T>>,
 }
 
-impl Polynomial {
-    pub fn new(coefficients: Array) -> Self {
-        assert!(!coefficients.is_empty());
+impl<T: Real> Polynomial<T> {
+    pub fn new(coefficient: Array<T>) -> Self {
+        assert!(!coefficient.is_empty());
         Polynomial {
-            coefficients,
-            roots: None,
+            coefficient,
+            root: None,
         }
+    }
+
+    pub fn coe(&self) -> &Array<T> {
+        &self.coefficient
+    }
+
+    pub fn root(&self) -> Option<&Array<T>> {
+        self.root.as_ref()
     }
 }

@@ -1,4 +1,6 @@
+use num;
+
 #[inline]
-pub fn approx_equal(a: f64, b: f64) -> bool {
-    (a - b).abs() <= f64::EPSILON
+pub fn approx_equal<T: num::Float>(a: T, b: T) -> bool {
+    (a - b).abs() <= T::epsilon()
 }
