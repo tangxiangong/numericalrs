@@ -5,7 +5,6 @@ use numericalrs::{
 };
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let v = vec![[1, 2, 4], [2, 3, 4]];
     let arr1 = Array::new(); // 创建空向量
     let arr2 = Array::from(vec![0.0; 5]); // 从动态数组创建
     let arr3 = Array::from([0., 1., 2., 3., 4.]); // 从静态数组创建
