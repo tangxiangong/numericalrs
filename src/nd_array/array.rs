@@ -1,8 +1,8 @@
+use crate::approx_equal;
 use crate::nd_array::errors::MathError;
 use std::fmt;
 use std::fmt::{Debug, Display, Formatter};
-use std::ops::Deref;
-use crate::approx_equal;
+use std::ops::{Deref, DerefMut};
 
 pub enum Norm {
     L1,
@@ -10,7 +10,7 @@ pub enum Norm {
     LInf,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Array {
     data: Vec<f64>,
 }
@@ -22,9 +22,9 @@ impl Deref for Array {
     }
 }
 
-impl Default for Array {
-    fn default() -> Self {
-         Self { data: Vec::<f64>::new() }
+impl DerefMut for Array {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.data
     }
 }
 
@@ -34,7 +34,9 @@ impl Array {
     }
 
     pub fn with_capacity(capacity: usize) -> Self {
-        Array { data: Vec::with_capacity(capacity) }
+        Array {
+            data: Vec::with_capacity(capacity),
+        }
     }
     pub fn zeros(size: usize) -> Array {
         Array::from(vec![0.0; size])
@@ -103,7 +105,9 @@ impl Display for Array {
 }
 
 impl<T> From<T> for Array
-where T: Into<Vec<f64>> {
+where
+    T: Into<Vec<f64>>,
+{
     fn from(value: T) -> Self {
         Self { data: value.into() }
     }
@@ -123,7 +127,10 @@ impl PartialEq for Array {
         } else if self.is_zeros() {
             true
         } else {
-            !self.iter().zip(other.iter()).any(|(&a, &b)| !approx_equal(a, b))
+            !self
+                .iter()
+                .zip(other.iter())
+                .any(|(&a, &b)| !approx_equal(a, b))
         }
     }
 }

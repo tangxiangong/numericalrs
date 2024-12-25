@@ -1,5 +1,5 @@
 mod macros;
-pub mod utils; 
+pub mod utils;
 pub use utils::*;
 
 pub mod nd_array;
