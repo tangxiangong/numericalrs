@@ -1,34 +1,29 @@
-use crate::MathError;
-use num::traits::real::Real;
+// use crate::MathError;
+// use num::traits::real::Real;
+use num::Num;
 use std::fmt;
 use std::fmt::{Debug, Display, Formatter};
 use std::ops::{Deref, DerefMut};
 
-pub enum Norm {
-    L1,
-    L2,
-    LInf,
-}
-
 #[derive(Debug)]
-pub struct Array<T: Real> {
+pub struct Array<T: Num = f64> {
     data: Vec<T>,
 }
 
-impl<T: Real> Deref for Array<T> {
+impl<T: Num> Deref for Array<T> {
     type Target = Vec<T>;
     fn deref(&self) -> &Self::Target {
         &self.data
     }
 }
 
-impl<T: Real> DerefMut for Array<T> {
+impl<T: Num> DerefMut for Array<T> {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.data
     }
 }
 
-impl<T: Real> Default for Array<T> {
+impl<T: Num> Default for Array<T> {
     fn default() -> Self {
         Self {
             data: Vec::<T>::new(),
@@ -36,7 +31,7 @@ impl<T: Real> Default for Array<T> {
     }
 }
 
-impl<T: Real> Array<T> {
+impl<T: Num + Clone> Array<T> {
     pub fn new() -> Self {
         Self::default()
     }
@@ -75,41 +70,63 @@ impl<T: Real> Array<T> {
     pub fn size(&self) -> usize {
         self.data.len()
     }
-
-    //TODO 是否真的需要数值转换
-    pub fn norm(&self, space: Norm) -> Result<f64, MathError> {
-        if self.is_empty() {
-            return Err(MathError::EmptyArrayErr);
-        }
-        match space {
-            Norm::L1 => {
-                let result = self.iter().fold(T::zero(), |acc, &x| acc + x.abs());
-                Ok(result.to_f64().unwrap())
-            }
-            Norm::L2 => {
-                let result = self
-                    .iter()
-                    .fold(T::zero(), |acc, &x| acc + x * x)
-                    .to_f64()
-                    .unwrap()
-                    .sqrt();
-                Ok(result)
-            }
-            Norm::LInf => {
-                let mut iter = self.iter().map(|&v| v.abs());
-                let mut result = iter.next().unwrap();
-                for v in iter {
-                    if v >= result {
-                        result = v;
-                    }
-                }
-                Ok(result.to_f64().unwrap())
-            }
-        }
-    }
 }
 
-impl<T: Real> Clone for Array<T> {
+//TODO 范数
+
+// impl<T: Real> Array<T> {
+//     pub fn l1_norm(&self) -> Result<T, MathError> {
+//         if self.is_empty() {
+//             Err(MathError::EmptyArrayErr)
+//         } else {
+//             let result = self.iter().fold(T::zero(), |acc, &x| acc + x.abs());
+//             Ok(result)
+//         }
+//     }
+// }
+
+// impl<T: ComplexNum> Array<T> {
+//     pub fn l1_norm(&self) -> Result<T, MathError> {
+//         if self.is_empty() {
+//             Err(MathError::EmptyArrayErr)
+//         } else {
+//             let result = self.iter().fold(T::zero(), |acc, &x| acc + x.norm());
+//             Ok(result)
+//         }
+//     }
+// }
+
+// pub fn norm(&self, space: Norm) -> Result<f64, MathError> {
+//     if self.is_empty() {
+//         return Err(MathError::EmptyArrayErr);
+//     }
+//     match space {
+//         Norm::L1 => {
+//
+//         }
+//         Norm::L2 => {
+//             let result = self
+//                 .iter()
+//                 .fold(T::zero(), |acc, &x| acc + x * x)
+//                 .to_f64()
+//                 .unwrap()
+//                 .sqrt();
+//             Ok(result)
+//         }
+//         Norm::LInf => {
+//             let mut iter = self.iter().map(|&v| v.abs());
+//             let mut result = iter.next().unwrap();
+//             for v in iter {
+//                 if v >= result {
+//                     result = v;
+//                 }
+//             }
+//             Ok(result.to_f64().unwrap())
+//         }
+//     }
+// }
+
+impl<T: Num + Clone> Clone for Array<T> {
     fn clone(&self) -> Self {
         Self {
             data: self.data.clone(),
@@ -117,13 +134,13 @@ impl<T: Real> Clone for Array<T> {
     }
 }
 
-impl<T: Real + Debug> Display for Array<T> {
+impl<T: Num + Debug + Clone> Display for Array<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "1-d Array {{{:?}, size={}}}", self.data, self.size())
     }
 }
 
-impl<T: Real, V> From<V> for Array<T>
+impl<T: Num, V> From<V> for Array<T>
 where
     V: Into<Vec<T>>,
 {
@@ -132,14 +149,14 @@ where
     }
 }
 
-impl<T: Real> FromIterator<T> for Array<T> {
+impl<T: Num> FromIterator<T> for Array<T> {
     fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
         let v = Vec::from_iter(iter);
         Self { data: v }
     }
 }
 
-impl<T: Real> PartialEq for Array<T> {
+impl<T: Num + Clone> PartialEq for Array<T> {
     fn eq(&self, other: &Self) -> bool {
         if self.size() != other.size() {
             false
@@ -151,4 +168,4 @@ impl<T: Real> PartialEq for Array<T> {
     }
 }
 
-impl<T: Real + Copy + Clone> Eq for Array<T> {}
+impl<T: Num + Copy + Clone> Eq for Array<T> {}

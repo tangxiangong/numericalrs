@@ -1,8 +1,5 @@
+use numrs::array;
 use numrs::Array;
-use numrs::{
-    array,
-    Norm::{LInf, L1, L2},
-};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let arr1 = Array::new(); // 创建空向量
@@ -16,8 +13,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         Ok(_) => println!("Hello World"),
         Err(e) => println!("{e}"),
     }
-    let (_a, _b, _c) = (arr3.norm(L1), arr3.norm(L2), arr3.norm(LInf)); // L1, L2, L inf 范数
-                                                                        // 迭代器
+    // let (_a, _b, _c) = (arr3.norm(L1), arr3.norm(L2), arr3.norm(LInf)); // L1, L2, L inf 范数
+    // 迭代器
     for &value in arr3.iter() {
         print!("value = {value}, ");
     }
