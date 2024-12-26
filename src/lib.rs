@@ -8,13 +8,15 @@ pub use nd_array::array::Array;
 
 pub use nd_array::ops;
 
-pub use nd_array::array::Norm;
-
 pub use nd_array::matrix::Matrix;
 
 pub mod errors;
 pub mod polynomial;
+pub mod traits;
+
 pub use errors::*;
+
+pub mod random;
 
 // #[cfg(test)]
 // mod tests {
