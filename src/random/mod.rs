@@ -1,2 +1,1 @@
-pub mod rand;
-pub use rand::*;
+pub mod random_array;

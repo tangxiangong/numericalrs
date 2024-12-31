@@ -7,7 +7,7 @@ use std::ops::RangeBounds;
 
 /// 辅助函数，用于创建均匀分布的随机向量和随机矩阵
 /// `R` 既可以是 `Range<T>` 也可以是 `RangeInclusive<T>`
-fn uniform_rand_generator<T, R>(range: R, n: usize) -> Vec<T>
+pub(crate) fn uniform_rand_generator<T, R>(range: R, n: usize) -> Vec<T>
 where
     // Range<T> & RangeInclusive<T> : RangeBounds<T>
     R: RangeBounds<T>,

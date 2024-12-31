@@ -1,10 +1,12 @@
-// use crate::MathError;
-// use num::traits::real::Real;
+use crate::traits::Norm;
+use crate::MathError;
 use num::Num;
+use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use std::fmt;
 use std::fmt::{Debug, Display, Formatter};
 use std::ops::{Deref, DerefMut};
 
+//TODO impl ParallelIterator for Array
 #[derive(Debug)]
 pub struct Array<T: Num = f64> {
     data: Vec<T>,
@@ -53,16 +55,6 @@ impl<T: Num + Clone> Array<T> {
         }
     }
 
-    // pub fn linspace(start: f64, end: f64, nums: usize) -> Result<Self, MathError> {
-    //     if start >= end {
-    //         Err(MathError::ArgsErr("第一个参数要小于第二个参数"))
-    //     } else {
-    //         let h = (end - start) / nums as f64;
-    //         let arr: Array = (0..nums).map(|idx| idx as f64 * h).collect();
-    //         Ok(arr)
-    //     }
-    // }
-
     pub fn is_zeros(&self) -> bool {
         !self.iter().any(|v| !v.is_zero())
     }
@@ -72,59 +64,48 @@ impl<T: Num + Clone> Array<T> {
     }
 }
 
-//TODO 范数
+impl Array {
+    pub fn linspace(start: f64, end: f64, nums: usize) -> Result<Self, MathError> {
+        if start >= end {
+            Err(MathError::ArgsErr("第一个参数要小于第二个参数"))
+        } else {
+            let h = (end - start) / nums as f64;
+            let v: Vec<_> = (0..nums)
+                .into_par_iter()
+                .map(|idx| idx as f64 * h)
+                .collect();
+            let arr = Array { data: v };
+            Ok(arr)
+        }
+    }
+}
 
-// impl<T: Real> Array<T> {
-//     pub fn l1_norm(&self) -> Result<T, MathError> {
-//         if self.is_empty() {
-//             Err(MathError::EmptyArrayErr)
-//         } else {
-//             let result = self.iter().fold(T::zero(), |acc, &x| acc + x.abs());
-//             Ok(result)
-//         }
-//     }
-// }
+impl<T: Norm + Num> Array<T> {
+    pub fn l1_norm(&self) -> Option<f64> {
+        if self.is_empty() {
+            None
+        } else {
+            let result = self.iter().fold(0.0, |acc, x| acc + Norm::norm(x));
+            Some(result)
+        }
+    }
+    pub fn l2_norm(&self) -> Option<f64> {
+        if self.is_empty() {
+            None
+        } else {
+            let result = self.iter().fold(0.0, |acc, x| acc + Norm::square(x));
+            Some(result)
+        }
+    }
 
-// impl<T: ComplexNum> Array<T> {
-//     pub fn l1_norm(&self) -> Result<T, MathError> {
-//         if self.is_empty() {
-//             Err(MathError::EmptyArrayErr)
-//         } else {
-//             let result = self.iter().fold(T::zero(), |acc, &x| acc + x.norm());
-//             Ok(result)
-//         }
-//     }
-// }
-
-// pub fn norm(&self, space: Norm) -> Result<f64, MathError> {
-//     if self.is_empty() {
-//         return Err(MathError::EmptyArrayErr);
-//     }
-//     match space {
-//         Norm::L1 => {
-//
-//         }
-//         Norm::L2 => {
-//             let result = self
-//                 .iter()
-//                 .fold(T::zero(), |acc, &x| acc + x * x)
-//                 .to_f64()
-//                 .unwrap()
-//                 .sqrt();
-//             Ok(result)
-//         }
-//         Norm::LInf => {
-//             let mut iter = self.iter().map(|&v| v.abs());
-//             let mut result = iter.next().unwrap();
-//             for v in iter {
-//                 if v >= result {
-//                     result = v;
-//                 }
-//             }
-//             Ok(result.to_f64().unwrap())
-//         }
-//     }
-// }
+    pub fn l_inf_norm(&self) -> Option<f64> {
+        if self.is_empty() {
+            None
+        } else {
+            self.iter().map(|v| Norm::norm(v)).reduce(f64::max)
+        }
+    }
+}
 
 impl<T: Num + Clone> Clone for Array<T> {
     fn clone(&self) -> Self {

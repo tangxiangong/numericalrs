@@ -1,4 +1,3 @@
 pub mod array;
-pub mod ops;
-
 pub mod matrix;
+pub mod ops;
